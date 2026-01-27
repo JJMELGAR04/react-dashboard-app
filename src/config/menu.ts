@@ -19,7 +19,7 @@ export const menu: MenuItem[] = [
     view: true,
     children: [], // submenus
   }
-].filter((menu) => menu.view)
+]
 
 export function selectItemMenu(route: string): MenuItem | undefined {
   const data = menu.find((item) => route.startsWith(item.key))
