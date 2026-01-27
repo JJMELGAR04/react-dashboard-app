@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+.ant-menu-item{
+  @apply font-extrabold
+}
+
 .ant-menu-item-icon {
   display: flex !important;
   align-items: center !important;

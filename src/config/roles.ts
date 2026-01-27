@@ -4,7 +4,7 @@ import {
 import React from 'react'
 
 export const roles = {
-  admin: 'ADMIN',
+  admin: 'super admin',
 } as const
 
 export type RoleName = (typeof roles)[keyof typeof roles]
