@@ -19,7 +19,9 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
+      "pnpm eslint:fix",
       "pnpm eslint:check",
+      "pnpm prettier:fix",
       "pnpm prettier:check"
     ]
   },
