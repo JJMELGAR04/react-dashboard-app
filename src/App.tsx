@@ -1,7 +1,7 @@
 import { Routes } from '@generouted/react-router/lazy'
-import { ConfigProvider } from "antd"
+import { ConfigProvider } from 'antd'
 import esES from 'antd/locale/es_ES'
-import { ToastContainer } from "react-toastify"
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import dayjs from 'dayjs'
 import 'dayjs/locale/es'
@@ -19,7 +19,6 @@ function App() {
           <Routes />
         </ConfigProvider>
       </RecoilRoot>
-
     </>
   )
 }

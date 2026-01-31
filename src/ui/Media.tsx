@@ -20,7 +20,6 @@ export default function Media({
   defaultEditable = false,
   maxVisible = 5,
 }: MediaProps) {
-
   const validPhotos: UploadMedia[] = useMemo(() => photos, [photos])
 
   const handleFileUpload = useCallback(
@@ -37,8 +36,9 @@ export default function Media({
                   (photo) =>
                     photo.name === newFile.name &&
                     photo.size === newFile.size &&
-                    photo.lastModified === (newFile.originFileObj as File)?.lastModified,
-                ),
+                    photo.lastModified ===
+                      (newFile.originFileObj as File)?.lastModified
+                )
             )
             .map((file) => ({
               ...(file as UploadMedia),
@@ -50,14 +50,14 @@ export default function Media({
 
           return [...activePhotos, ...newFiles, ...deletedFiles].slice(
             0,
-            maxVisible,
+            maxVisible
           )
         })
       } else {
         message.error('hook setPhotos not found')
       }
     },
-    [setPhotos, maxVisible],
+    [setPhotos, maxVisible]
   )
 
   const handleFileRemove = useCallback(
@@ -66,14 +66,14 @@ export default function Media({
         setPhotos((previous) => {
           const previousArray = Array.isArray(previous) ? previous : []
           return previousArray.map((f) =>
-            f.uid === file.uid ? { ...f, deleted: true } : f,
+            f.uid === file.uid ? { ...f, deleted: true } : f
           )
         })
       } else {
         message.error('hook setPhotos not found')
       }
     },
-    [setPhotos],
+    [setPhotos]
   )
 
   const renderPreview = useCallback(() => {
@@ -84,7 +84,7 @@ export default function Media({
     if (visibleFiles.length === 0) {
       if (!defaultEditable) {
         return (
-          <div className="w-full text-center italic text-gray-400">
+          <div className="w-full text-center text-gray-400 italic">
             No hay imágenes disponibles
           </div>
         )
@@ -97,12 +97,8 @@ export default function Media({
         {visibleFiles.map((file) => (
           <div
             key={file.uid}
-            className="
-        group relative aspect-square
-        w-[48%] overflow-hidden rounded-xl bg-gray-50
-        shadow-sm transition-all duration-300 hover:shadow-md
-        sm:w-[31%] md:w-[23%] lg:w-[18%]
-      ">
+            className="group relative aspect-square w-[48%] overflow-hidden rounded-xl bg-gray-50 shadow-sm transition-all duration-300 hover:shadow-md sm:w-[31%] md:w-[23%] lg:w-[18%]"
+          >
             <AntdImage
               src={
                 file.originFileObj
@@ -121,13 +117,8 @@ export default function Media({
                   event.stopPropagation()
                   handleFileRemove(file)
                 }}
-                className="
-            absolute right-1.5 top-1.5 z-30 flex size-6 items-center
-            justify-center rounded-full bg-red-500 text-[10px] text-white
-            shadow-sm transition-all hover:bg-red-600
-            sm:size-7 sm:text-[11px]
-            md:size-8 md:text-[12px]
-          ">
+                className="absolute top-1.5 right-1.5 z-30 flex size-6 items-center justify-center rounded-full bg-red-500 text-[10px] text-white shadow-sm transition-all hover:bg-red-600 sm:size-7 sm:text-[11px] md:size-8 md:text-[12px]"
+              >
                 <CloseOutlined className="text-[9px] sm:text-[10px] md:text-[11px]" />
               </button>
             )}
@@ -143,13 +134,8 @@ export default function Media({
             showUploadList={false}
             beforeUpload={() => false}
             openFileDialogOnClick
-            className="
-        flex aspect-square
-        w-[48%] cursor-pointer items-center justify-center
-        rounded-xl border-2 border-dashed
-        border-gray-300 bg-gray-50 transition-all duration-300 hover:border-blue-400
-        hover:bg-blue-50 sm:w-[31%] md:w-[23%] lg:w-[18%]
-      ">
+            className="flex aspect-square w-[48%] cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 transition-all duration-300 hover:border-blue-400 hover:bg-blue-50 sm:w-[31%] md:w-[23%] lg:w-[18%]"
+          >
             <PlusOutlined className="text-3xl text-blue-500 opacity-80 group-hover:opacity-100" />
           </Dragger>
         )}
@@ -180,7 +166,7 @@ export default function Media({
         </div>
       </div>
     ),
-    [],
+    []
   )
 
   return (
@@ -188,10 +174,11 @@ export default function Media({
       name="imageUrl"
       valuePropName="fileList"
       getValueFromEvent={(event) => event?.fileList}
-      className="mb-6">
+      className="mb-6"
+    >
       <div className="relative w-full rounded-2xl border-2 border-dashed border-gray-300 bg-white/60 p-4 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-blue-400 hover:shadow-md">
         {validPhotos.filter((f) => !f.deleted).length === 0 &&
-          defaultEditable ? (
+        defaultEditable ? (
           <Dragger
             name="portada"
             fileList={[]}
@@ -200,12 +187,14 @@ export default function Media({
             multiple
             showUploadList={false}
             beforeUpload={() => false}
-            className={`flex ${height} min-h-[270px] w-full flex-wrap items-center justify-center rounded-2xl bg-transparent`}>
+            className={`flex ${height} min-h-[270px] w-full flex-wrap items-center justify-center rounded-2xl bg-transparent`}
+          >
             {renderUploadArea()}
           </Dragger>
         ) : (
           <div
-            className={`flex ${height} min-h-[270px] flex-wrap items-center justify-center rounded-xl`}>
+            className={`flex ${height} min-h-[270px] flex-wrap items-center justify-center rounded-xl`}
+          >
             {renderPreview()}
           </div>
         )}

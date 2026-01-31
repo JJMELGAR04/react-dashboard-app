@@ -1,6 +1,4 @@
-import {
-  Users,
-} from 'lucide-react'
+import { Users } from 'lucide-react'
 import React from 'react'
 import type { LucideProps } from 'lucide-react'
 import type { MenuItem, SubMenuItem } from '@/models/app/menu'
@@ -18,7 +16,7 @@ export const menu: MenuItem[] = [
     authorized: [roles.all],
     view: true,
     children: [], // submenus
-  }
+  },
 ]
 
 export function selectItemMenu(route: string): MenuItem | undefined {

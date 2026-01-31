@@ -1,4 +1,3 @@
-
 import { menu, selectItemMenu, selectSubItemMenu } from '@/config/menu'
 import { searchRecoil } from '@/constants/recoil'
 import type { RoleName } from '@/enum/role'
@@ -47,16 +46,30 @@ export default function OutletMenu({
   const role = profile?.role?.name
 
   const buildMenuItemsForAntd = useCallback(
-    (menu: MenuItem[], role: RoleName, collapsed: boolean): MenuProps['items'] => {
+    (
+      menu: MenuItem[],
+      role: RoleName,
+      collapsed: boolean
+    ): MenuProps['items'] => {
       return menu
         .filter(
           (item) =>
             item.authorized.includes(role) ||
             item.authorized.includes('*') ||
-            item.children.some((c) => c.authorized.includes(role) || c.authorized.includes('*') || c.view)
+            item.children.some(
+              (c) =>
+                c.authorized.includes(role) ||
+                c.authorized.includes('*') ||
+                c.view
+            )
         )
         .map((item) => {
-          const children = item.children.filter((c) => c.authorized.includes(role) || c.authorized.includes('*') && c.view)
+          const children = item.children
+            .filter(
+              (c) =>
+                c.authorized.includes(role) ||
+                (c.authorized.includes('*') && c.view)
+            )
             .map((c: SubMenuItem) => ({
               key: c.key,
               label: (
@@ -101,7 +114,6 @@ export default function OutletMenu({
     return item.key
   }, [])
 
-
   const handleLogout = () => {
     logout()
   }
@@ -117,10 +129,12 @@ export default function OutletMenu({
       {!isMobile && (
         <>
           <div
-            className={`fixed top-5 z-500 -translate-x-full transition-all duration-300 ease-out  ${collapsed ? 'left-[95px]' : 'left-[265px]'} hidden xl:block`}>
+            className={`fixed top-5 z-500 -translate-x-full transition-all duration-300 ease-out ${collapsed ? 'left-[95px]' : 'left-[265px]'} hidden xl:block`}
+          >
             <button
               onClick={() => handleMenuClick('toggle')}
-              className="flex items-center justify-center rounded-full bg-white p-1.5 text-primary shadow-md transition-transform duration-150 hover:bg-gray-50 active:scale-95">
+              className="text-primary flex items-center justify-center rounded-full bg-white p-1.5 shadow-md transition-transform duration-150 hover:bg-gray-50 active:scale-95"
+            >
               {collapsed ? (
                 <RightOutlined className="text-[15px] font-bold" />
               ) : (
@@ -139,8 +153,10 @@ export default function OutletMenu({
               trigger={null}
             >
               <div
-                className={`flex items-center gap-3 p-4 transition-all duration-300 ${collapsed ? 'justify-center' : ''
-                  }`}>
+                className={`flex items-center gap-3 p-4 transition-all duration-300 ${
+                  collapsed ? 'justify-center' : ''
+                }`}
+              >
                 <Avatar
                   size={48}
                   className="bg-blue-100 font-semibold text-blue-600"
@@ -156,11 +172,13 @@ export default function OutletMenu({
                   <div className="flex flex-col overflow-hidden">
                     <Tooltip
                       title={`${profile?.username || 'Unknown'}`}
-                      placement="bottom">
+                      placement="bottom"
+                    >
                       <Text
                         ellipsis
                         strong
-                        className="text-sm font-medium leading-tight text-gray-800">
+                        className="text-sm leading-tight font-medium text-gray-800"
+                      >
                         {loadingSession
                           ? 'Cargando...'
                           : `${profile?.username ?? 'Unknown'}`}
@@ -169,7 +187,8 @@ export default function OutletMenu({
 
                     <Tag
                       className="mt-1 w-fit text-xs"
-                      color={role ? 'green' : 'red'}>
+                      color={role ? 'green' : 'red'}
+                    >
                       {role?.toLocaleLowerCase() || 'unknown'}
                     </Tag>
                   </div>
@@ -198,7 +217,8 @@ export default function OutletMenu({
                   icon={<LogoutOutlined />}
                   onClick={handleLogout}
                   block
-                  className="flex items-center justify-center gap-2 text-sm font-medium text-red-600 transition-all hover:bg-red-50">
+                  className="flex items-center justify-center gap-2 text-sm font-medium text-red-600 transition-all hover:bg-red-50"
+                >
                   {!collapsed && 'Cerrar sesión'}
                 </Button>
               </div>
@@ -208,8 +228,9 @@ export default function OutletMenu({
       )}
       {isMobile && (
         <div
-          className={`fixed top-0 z-5000 h-dvh w-full overflow-y-auto bg-white shadow-md transition-all duration-300 ease-out ${collapsed ? '-translate-x-full' : 'translate-x-0'
-            }`}
+          className={`fixed top-0 z-5000 h-dvh w-full overflow-y-auto bg-white shadow-md transition-all duration-300 ease-out ${
+            collapsed ? '-translate-x-full' : 'translate-x-0'
+          }`}
         >
           <div className="flex w-full flex-col gap-4 p-4">
             <div className="border-primary flex cursor-pointer items-center gap-3 overflow-hidden rounded-lg border text-center transition-colors duration-150">

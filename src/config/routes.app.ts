@@ -1,5 +1,5 @@
-import type { RoleName } from "@/enum/role"
-import { RoutesEnum } from "@/enum/routes..app"
+import type { RoleName } from '@/enum/role'
+import { RoutesEnum } from '@/enum/routes..app'
 
 type RouteConfig = {
   auth: boolean
@@ -22,13 +22,13 @@ export const routesConfig: Record<RoutesEnum, RouteConfig> = {
     roles: [],
     permission: ['*'],
     title: 'Login',
-    search: false
+    search: false,
   },
   [RoutesEnum.DASHBOARD]: {
     auth: true,
     roles: ['*'],
     permission: ['*'],
     title: 'Dashboard',
-    search: true
+    search: true,
   },
 } as const

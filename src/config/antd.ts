@@ -1,16 +1,16 @@
-import type { ThemeConfig } from 'antd';
+import type { ThemeConfig } from 'antd'
 
-const baseBG = '#ffffff';
-const layoutBG = '#ffffff';
+const baseBG = '#ffffff'
+const layoutBG = '#ffffff'
 
-const primaryColor = 'red';
-const primaryHover = 'red';
-const secondaryColor = 'orange';
+const primaryColor = 'red'
+const primaryHover = 'red'
+const secondaryColor = 'orange'
 
-const textBase = '#1f2937';
-const borderColor = '#e5e7eb';
+const textBase = '#1f2937'
+const borderColor = '#e5e7eb'
 
-export const baseBorderRadius = 6;
+export const baseBorderRadius = 6
 
 export const antd: ThemeConfig = {
   token: {
@@ -43,21 +43,21 @@ export const antd: ThemeConfig = {
       controlHeight: 40,
       borderRadius: 6,
       paddingInline: 12,
-      colorBorder: borderColor
+      colorBorder: borderColor,
     },
 
     InputNumber: {
       controlHeight: 40,
-      paddingInline: 12
+      paddingInline: 12,
     },
 
     Select: {
-      controlHeight: 40
+      controlHeight: 40,
     },
 
     Table: {
       borderRadius: 6,
-      borderColor: borderColor
+      borderColor: borderColor,
     },
 
     Modal: {
@@ -76,6 +76,6 @@ export const antd: ThemeConfig = {
       colorText: '#ffffff',
       borderRadius: 6,
       padding: 8,
-    }
+    },
   },
-};
+}

@@ -6,8 +6,22 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "pnpm check-types && pnpm eslint && pnpm prettier:check",
+    "lint:fix": "pnpm eslint:fix && pnpm prettier:fix",
+    "eslint": "eslint --cache --ext .ts,.tsx .",
+    "eslint:fix": "pnpm eslint --fix",
+    "eslint:check": "cross-env eslint --cache --ext .ts,.tsx .",
+    "prettier:check": "prettier --check \"**/*.ts\" \"**/*.tsx\"",
+    "prettier:fix": "prettier --write \"**/*.ts\" \"**/*.tsx\"",
+    "check-types": "tsc --noemit",
+    "prepare": "node checkHusky.js"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "pnpm eslint:check",
+      "pnpm prettier:check"
+    ]
   },
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
@@ -36,9 +50,12 @@
     "@vitejs/plugin-react-swc": "^4.2.2",
     "autoprefixer": "^10.4.22",
     "eslint": "^9.39.1",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2",

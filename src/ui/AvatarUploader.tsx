@@ -18,11 +18,11 @@ export default function AvatarUploader({
     () =>
       avatarFile
         ? avatarFile.url ||
-        (avatarFile.originFileObj
-          ? URL.createObjectURL(avatarFile.originFileObj)
-          : null)
+          (avatarFile.originFileObj
+            ? URL.createObjectURL(avatarFile.originFileObj)
+            : null)
         : null,
-    [avatarFile],
+    [avatarFile]
   )
 
   return (
@@ -62,10 +62,12 @@ export default function AvatarUploader({
           }
           setAvatarFile(customFile)
           return false // evita la subida automática
-        }}>
+        }}
+      >
         <Button
           size="small"
-          className="absolute -bottom-2 right-0 rounded-full border bg-white text-xs shadow-sm hover:bg-neutral-50">
+          className="absolute right-0 -bottom-2 rounded-full border bg-white text-xs shadow-sm hover:bg-neutral-50"
+        >
           Cambiar
         </Button>
       </Upload>

@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
 
 export default function useQueryParams<const T extends readonly string[]>(
-  querys: T,
+  querys: T
 ) {
   type Keys = T[number]
 
   const isAllowed = useCallback(
     (key: string): key is Keys => querys.includes(key as Keys),
-    [querys],
+    [querys]
   )
 
   const getUrlParams = useCallback(() => {
@@ -32,7 +32,7 @@ export default function useQueryParams<const T extends readonly string[]>(
       url.searchParams.set(key, value)
       window.history.pushState({}, '', url.toString())
     },
-    [isAllowed],
+    [isAllowed]
   )
 
   const removeUrlParameter = useCallback(
@@ -44,7 +44,7 @@ export default function useQueryParams<const T extends readonly string[]>(
       url.searchParams.delete(key)
       window.history.pushState({}, '', url.toString())
     },
-    [isAllowed],
+    [isAllowed]
   )
 
   const setUrlParams = useCallback(
@@ -58,12 +58,12 @@ export default function useQueryParams<const T extends readonly string[]>(
           if (!isAllowed(key)) return
           if (value === undefined) return
           url.searchParams.set(key, value)
-        },
+        }
       )
 
       window.history.pushState({}, '', url.toString())
     },
-    [isAllowed],
+    [isAllowed]
   )
 
   return {

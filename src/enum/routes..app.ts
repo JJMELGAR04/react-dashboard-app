@@ -1,5 +1,5 @@
 export enum RoutesEnum {
-    ROOT = '/',
-    LOGIN = '/login',
-    DASHBOARD = '/dashboard',
+  ROOT = '/',
+  LOGIN = '/login',
+  DASHBOARD = '/dashboard',
 }

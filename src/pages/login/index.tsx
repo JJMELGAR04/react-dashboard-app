@@ -1,5 +1,5 @@
-import LoginView from "../../views/login/LoginView";
+import LoginView from '../../views/login/LoginView'
 
 export default function Login() {
-    return <LoginView />
+  return <LoginView />
 }
