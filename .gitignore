@@ -24,5 +24,8 @@ dist-ssr
 *.sln
 *.sw?
 
-*.env
 /dist
+
+tsconfig.tsbuildinfo
+
+.eslintcache

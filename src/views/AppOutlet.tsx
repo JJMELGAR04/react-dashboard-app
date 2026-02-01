@@ -1,6 +1,6 @@
+import OutletContainer from '@/ui/outlet/OutletContainer'
 import { Layout } from 'antd'
 import { Outlet } from 'react-router-dom'
-import OutletContainer from 'src/ui/outlet/OutletContainer'
 
 const AppOutlet: React.FC = () => {
   //const isMobile = useResponsive('(max-width: 768px)')

@@ -1,5 +1,5 @@
 import SessionProvider from '@/context/providers/SessionProvider'
-import AppOutlet from 'src/views/AppOutlet'
+import AppOutlet from '@/views/AppOutlet'
 
 export default function AppLayout() {
   return (

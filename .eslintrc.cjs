@@ -18,6 +18,20 @@ module.exports = {
     'plugin:tailwindcss/recommended',
     'prettier',
   ],
+  ignorePatterns: [
+    ".node_modules",
+    "dist",
+    "cache",
+    "build",
+    "**/node_modules/**",
+    "public",
+    "docker-compose*",
+    ".stylelintcache",
+    ".env*",
+    "spec*.yaml",
+    "router.ts",
+    "migrations/**"
+  ],
   globals: {
     google: 'readonly',
   },

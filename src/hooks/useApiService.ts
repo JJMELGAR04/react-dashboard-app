@@ -1,7 +1,7 @@
 import BaseService from '@/models/api/BaseService'
 import type PaginationResponse from '@/models/api/Pagination'
+import errorResponse from '@/utils/errorResponse'
 import { useState, useCallback, useEffect } from 'react'
-import errorResponse from 'src/utils/errorResponse'
 
 interface Props<T> {
   service: BaseService<T>
