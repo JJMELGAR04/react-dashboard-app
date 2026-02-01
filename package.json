@@ -10,19 +10,18 @@
     "lint": "pnpm check-types && pnpm eslint && pnpm prettier:check",
     "lint:fix": "pnpm eslint:fix && pnpm prettier:fix",
     "eslint": "eslint --cache --ext .ts,.tsx .",
-    "eslint:fix": "pnpm eslint --fix",
-    "eslint:check": "cross-env eslint --cache --ext .ts,.tsx .",
-    "prettier:check": "prettier --check \"**/*.ts\" \"**/*.tsx\"",
-    "prettier:fix": "prettier --write \"**/*.ts\" \"**/*.tsx\"",
+    "eslint:fix": "eslint --fix --ext .ts,.tsx .",
+    "prettier:check": "prettier --check \"**/*.{ts,tsx}\"",
+    "prettier:fix": "prettier --write \"**/*.{ts,tsx}\"",
     "check-types": "tsc --noemit",
     "prepare": "node checkHusky.js"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "pnpm eslint:fix",
-      "pnpm eslint:check",
-      "pnpm prettier:fix",
-      "pnpm prettier:check"
+      "eslint --fix",
+      "eslint --cache --ext .ts,.tsx .",
+      "prettier --write",
+      "prettier --check"
     ]
   },
   "dependencies": {
@@ -61,6 +60,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "postcss": "^8.5.6",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2",
