@@ -1,82 +1,83 @@
-import { useState, useCallback, useEffect, type ReactNode } from 'react'
+import { type ReactNode, useCallback, useEffect } from 'react'
 import { message } from 'antd'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { SessionContext } from '../SessionContext'
-import { AuthService } from '@/services/api/AuthSservice'
 import type User from '@/models/api/entities/User'
-import errorResponse from '@/utils/errorResponse'
-import { getToken, removeToken, setToken } from '@/services/token'
 import type SessionType from '@/models/context/SessionType'
 import type SessionResponse from '@/models/api/SessionResponse'
+import { userService } from '@/services/api'
+import { appSettings } from '@/AppSettings'
+import { queryKeys } from '@/lib/queryClient'
 
-const service = AuthService.getInstance()
+const service = userService
+const settings = appSettings
 
 export default function SessionProvider({ children }: { children: ReactNode }) {
   const [messageApi, contextHolder] = message.useMessage()
-  const [user, setUser] = useState<User | undefined>(undefined)
-  const [loadingSession, setLoading] = useState<boolean>(true)
   const navigate = useNavigate()
   const location = useLocation()
+  const queryClient = useQueryClient()
 
-  const login = useCallback(async (username: string, password: string) => {
-    return await service.login(username, password)
-  }, [])
+  const token = settings.token
 
-  const signup = useCallback(async (payload: User) => {
-    return await service.signUp(payload)
-  }, [])
+  const { data: profile, isLoading: profileLoading } = useQuery<User>({
+    queryKey: [queryKeys.session],
+    queryFn: () => service.profile(),
+    enabled: !!token,
+    retry: false,
+  })
+
+  const loginMutation = useMutation({
+    mutationFn: (payload: { username: string; password: string }) =>
+      service.login(payload),
+  })
+
+  const signupMutation = useMutation({
+    mutationFn: (payload: User) => service.signUp({ payload }),
+  })
 
   const saveSession = useCallback(
     ({ token, data }: SessionResponse) => {
-      setUser(data)
-      setToken(token)
-      navigate('/dashboard')
+      settings.token = token
+      queryClient.setQueryData([queryKeys.session], data)
+      navigate('/dashboard', { replace: true })
     },
-    [navigate]
+    [navigate, queryClient]
   )
 
   const logout = useCallback(() => {
-    removeToken()
-    setUser(undefined)
-    messageApi.info('Sesión cerrada correctamente.')
-    if (location.pathname !== '/login') navigate('/login', { replace: true })
-  }, [messageApi, navigate, location.pathname])
+    settings.removeToken()
+    queryClient.setQueryData([queryKeys.session], null)
 
-  const loadProfile = useCallback(async () => {
-    try {
-      const response = await service.profile()
-      if (response) setUser(response)
-      else throw new Error('Perfil inválido')
-    } catch (error) {
-      errorResponse({ error })
-      setUser(undefined)
-      removeToken()
-      if (location.pathname !== '/login') navigate('/login', { replace: true })
-    } finally {
-      setLoading(false)
+    messageApi.info('Sesión cerrada correctamente.')
+
+    if (location.pathname !== '/login') {
+      navigate('/login', { replace: true })
     }
-  }, [navigate, location.pathname])
+  }, [messageApi, navigate, location.pathname, queryClient])
 
   useEffect(() => {
-    const token = getToken()
-    if (token) loadProfile()
-    else {
-      setLoading(false)
-      if (location.pathname !== '/login') navigate('/login', { replace: true })
+    if (!profileLoading && !token && location.pathname !== '/login') {
+      navigate('/login', { replace: true })
     }
-  }, [loadProfile, location.pathname, navigate])
+  }, [profileLoading, token, location.pathname, navigate])
 
   const value: SessionType = {
-    user,
-    login,
-    signup,
-    logout,
+    profile,
+    login: loginMutation.mutateAsync,
+    signup: signupMutation.mutateAsync,
     saveSession,
-    loadingSession,
+    logout,
+    loading: {
+      profile: profileLoading,
+      login: loginMutation.isPending,
+      signup: signupMutation.isPending,
+    },
   }
 
-  if (loadingSession) {
+  if (profileLoading && token) {
     return (
       <div className="flex h-screen items-center justify-center text-lg text-gray-600">
         Cargando sesión...

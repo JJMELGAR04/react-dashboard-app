@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { AtomEffect, atomFamily, useRecoilState, RecoilState } from 'recoil'
 import { ZodType, z } from 'zod'
 import CryptoJS from 'crypto-js'
-import { environment } from '@/config/environments'
+import { appSettings } from '@/AppSettings'
 
 // Effect de Recoil para sincronizar con localStorage y validar con Zod
 export const localStorageEffectWithZod = <T>(
@@ -12,7 +12,7 @@ export const localStorageEffectWithZod = <T>(
   return ({ setSelf, onSet }) => {
     if (typeof window === 'undefined') return
 
-    const SECRET_KEY = environment.getSecretKey
+    const SECRET_KEY = appSettings.secretKey
     const savedValue = localStorage.getItem(storageKey)
 
     if (savedValue) {
@@ -63,14 +63,14 @@ export const localStorageEffectWithZod = <T>(
 const anyValueSchema = z.unknown()
 
 export const dynamicRecoilFamily = atomFamily<unknown | undefined, string>({
-  key: 'dynamic_recoil_family',
+  key: 'storage_recoil_family',
   default: undefined,
   effects_UNSTABLE: (param) => [
     localStorageEffectWithZod(`recoil_${param}`, anyValueSchema),
   ],
 })
 
-export default function useRecoil<T>(key: string, defaultValue?: T) {
+export default function useRecoilStorage<T>(key: string, defaultValue?: T) {
   const [state, setState] = useRecoilState<T | undefined>(
     dynamicRecoilFamily(key) as RecoilState<T | undefined>
   )

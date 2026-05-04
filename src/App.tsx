@@ -1,12 +1,11 @@
 import { Routes } from '@generouted/react-router/lazy'
-import { ConfigProvider } from 'antd'
-import esES from 'antd/locale/es_ES'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import dayjs from 'dayjs'
 import 'dayjs/locale/es'
-import { antd } from './config/antd'
 import { RecoilRoot } from 'recoil'
+import { queryClient } from './lib/queryClient'
+import { QueryClientProvider } from '@tanstack/react-query'
 
 dayjs.locale('es')
 
@@ -15,9 +14,9 @@ function App() {
     <>
       <ToastContainer />
       <RecoilRoot>
-        <ConfigProvider theme={antd} locale={esES}>
+        <QueryClientProvider client={queryClient}>
           <Routes />
-        </ConfigProvider>
+        </QueryClientProvider>
       </RecoilRoot>
     </>
   )

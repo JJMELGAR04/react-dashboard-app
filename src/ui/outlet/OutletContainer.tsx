@@ -7,12 +7,12 @@ import { useLocation } from 'react-router-dom'
 import OutletMenu from './OutletMenu'
 import { useSession } from '@/hooks/useSession'
 import ForbiddenView from '@/views/ForbiddenView'
-import useRecoil from '@/hooks/useRecoil'
 import { searchRecoil } from '@/constants/recoil'
 import type { RoutesEnum } from '@/enum/routes..app'
 import { routesConfig } from '@/config/routes.app'
 import { isAuthorized } from '@/utils/permission.app'
 import NotFoundView from '@/views/NotFoundView'
+import useRecoilStorage from '@/hooks/core/useRecoilStorage'
 
 export default function OutletContainer({
   children,
@@ -21,10 +21,10 @@ export default function OutletContainer({
   children: React.ReactNode
   isMobile: boolean
 }) {
-  const [search, setSearch] = useRecoil<string | undefined>(searchRecoil)
+  const [search, setSearch] = useRecoilStorage<string | undefined>(searchRecoil)
   const [collapsed, setCollapsed] = useState(true)
 
-  const { user, loadingSession } = useSession()
+  const { profile: user, loading } = useSession()
   const location = useLocation()
 
   const role = user?.role?.name
@@ -62,7 +62,8 @@ export default function OutletContainer({
 
   if (!findRoute.auth) return children
 
-  if (!allowed) return <ForbiddenView />
+  console.log({ allowed, user })
+  //if (!allowed) return <ForbiddenView />
 
   return (
     <>
@@ -108,7 +109,7 @@ export default function OutletContainer({
               <MenuSquare />
             </button>
 
-            {loadingSession ? (
+            {loading.profile ? (
               <Spin indicator={<LoadingOutlined spin />} size="small" />
             ) : (
               <Avatar

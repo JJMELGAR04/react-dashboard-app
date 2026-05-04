@@ -1,9 +1,6 @@
 import { useSession } from '@/hooks/useSession'
-import type ErrorResponse from '@/models/api/ErrorResponse'
 import type User from '@/models/api/entities/User'
-import errorResponse from '@/utils/errorResponse'
 import { Button, Form, Input, message, Tabs } from 'antd'
-import { useState } from 'react'
 
 interface LoginProps {
   username: string
@@ -20,27 +17,22 @@ interface SignUpProps {
 }
 
 export default function AuthView() {
-  const { login, signup, saveSession } = useSession()
+  const { login, signup, saveSession, loading } = useSession()
+
   const [loginForm] = Form.useForm<LoginProps>()
   const [signUpForm] = Form.useForm<SignUpProps>()
-  const [loading, setLoading] = useState(false)
-  const [errorLogin, setErrorLogin] = useState<ErrorResponse>()
-  const [errorSignUp, setErrorSignUp] = useState<ErrorResponse>()
 
   const handleLogin = async (values: LoginProps) => {
-    setLoading(true)
-    setErrorLogin(undefined)
     try {
-      const response = await login(values.username.trim(), values.password)
-      if (response) {
-        loginForm.resetFields()
-        saveSession(response)
-      }
+      const response = await login({
+        username: values.username.trim(),
+        password: values.password,
+      })
+
+      loginForm.resetFields()
+      saveSession(response)
     } catch (error: unknown) {
-      const response = errorResponse({ error })
-      setErrorLogin(response)
-    } finally {
-      setLoading(false)
+      console.error(error)
     }
   }
 
@@ -50,8 +42,6 @@ export default function AuthView() {
       return
     }
 
-    setErrorSignUp(undefined)
-    setLoading(true)
     try {
       const payload: User = {
         username: values.username,
@@ -61,17 +51,10 @@ export default function AuthView() {
         password: values.password,
       }
       const result = await signup(payload)
-      if (result) {
-        signUpForm.resetFields()
-        saveSession(result)
-      } else {
-        message.error('Error al crear la cuenta.')
-      }
+      signUpForm.resetFields()
+      saveSession(result)
     } catch (error: unknown) {
-      const response = errorResponse({ error })
-      setErrorSignUp(response)
-    } finally {
-      setLoading(false)
+      console.error(error)
     }
   }
 
@@ -90,9 +73,7 @@ export default function AuthView() {
                 <Form.Item
                   label="Usuario"
                   name="username"
-                  rules={[
-                    { required: true, message: 'Por favor ingresa tu usuario' },
-                  ]}
+                  rules={[{ required: true, message: 'Ingresa tu usuario' }]}
                 >
                   <Input placeholder="Usuario" />
                 </Form.Item>
@@ -100,12 +81,7 @@ export default function AuthView() {
                 <Form.Item
                   label="Contraseña"
                   name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Por favor ingresa tu contraseña',
-                    },
-                  ]}
+                  rules={[{ required: true, message: 'Ingresa tu contraseña' }]}
                 >
                   <Input.Password placeholder="Contraseña" />
                 </Form.Item>
@@ -114,8 +90,8 @@ export default function AuthView() {
                   <Button
                     type="primary"
                     htmlType="submit"
-                    loading={loading}
-                    className={`w-full transform font-bold! ${errorLogin ? 'error-move' : ''}`}
+                    loading={loading.login}
+                    className="w-full font-bold!"
                   >
                     Iniciar sesión
                   </Button>
@@ -123,6 +99,7 @@ export default function AuthView() {
               </Form>
             </Tabs.TabPane>
 
+            {/* 📝 SIGNUP */}
             <Tabs.TabPane tab="Registrarse" key="signup">
               <Form<SignUpProps>
                 form={signUpForm}
@@ -131,14 +108,9 @@ export default function AuthView() {
                 className="w-full"
               >
                 <Form.Item
-                  label="Nombre de usuario"
+                  label="Usuario"
                   name="username"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Por favor ingresa tu nombre de usuario',
-                    },
-                  ]}
+                  rules={[{ required: true }]}
                 >
                   <Input placeholder="Nombre de usuario" />
                 </Form.Item>
@@ -146,9 +118,7 @@ export default function AuthView() {
                 <Form.Item
                   label="Nombre"
                   name="name"
-                  rules={[
-                    { required: true, message: 'Por favor ingresa tu nombre' },
-                  ]}
+                  rules={[{ required: true }]}
                 >
                   <Input placeholder="Nombre" />
                 </Form.Item>
@@ -156,51 +126,39 @@ export default function AuthView() {
                 <Form.Item
                   label="Apellido"
                   name="surname"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Por favor ingresa tu apellido',
-                    },
-                  ]}
+                  rules={[{ required: true }]}
                 >
                   <Input placeholder="Apellido" />
                 </Form.Item>
 
                 <Form.Item
-                  label="Correo electrónico"
+                  label="Correo"
                   name="email"
                   rules={[
-                    { required: true, message: 'Por favor ingresa tu correo' },
-                    { type: 'email', message: 'Ingresa un correo válido' },
+                    { required: true },
+                    { type: 'email', message: 'Correo inválido' },
                   ]}
                 >
                   <Input placeholder="correo@ejemplo.com" />
                 </Form.Item>
 
-                <div className="m-0 flex w-full items-center gap-1">
+                <div className="flex gap-2">
                   <Form.Item
                     label="Contraseña"
                     name="password"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Por favor ingresa tu contraseña',
-                      },
-                    ]}
+                    rules={[{ required: true }]}
                     className="w-full!"
                   >
-                    <Input.Password placeholder="Contraseña" />
+                    <Input.Password />
                   </Form.Item>
 
                   <Form.Item
-                    label="Confirmar contraseña"
+                    label="Confirmar"
                     name="confirmPassword"
-                    rules={[
-                      { required: true, message: 'Confirma tu contraseña' },
-                    ]}
+                    rules={[{ required: true }]}
                     className="w-full!"
                   >
-                    <Input.Password placeholder="Confirmar contraseña" />
+                    <Input.Password />
                   </Form.Item>
                 </div>
 
@@ -208,8 +166,8 @@ export default function AuthView() {
                   <Button
                     type="primary"
                     htmlType="submit"
-                    loading={loading}
-                    className={`w-full transform font-bold! ${errorSignUp ? 'error-move' : ''}`}
+                    loading={loading.signup}
+                    className="w-full font-bold!"
                   >
                     Registrarse
                   </Button>
@@ -218,6 +176,7 @@ export default function AuthView() {
             </Tabs.TabPane>
           </Tabs>
         </div>
+
         <div className="hidden md:block md:w-1/2">
           <img src={''} alt="Login" className="h-full w-full object-cover" />
         </div>

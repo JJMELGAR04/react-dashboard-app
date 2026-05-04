@@ -1,9 +1,8 @@
+import BaseEntity from '../core/_BaseEntity'
 import type Role from './Role'
 
-export default interface User {
-  id?: number
+export default interface User extends BaseEntity {
   username: string
-  name: string
   surname: string
   email: string
   password: string

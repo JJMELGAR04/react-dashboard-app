@@ -1,7 +1,7 @@
 import { menu, selectItemMenu, selectSubItemMenu } from '@/config/menu'
 import { searchRecoil } from '@/constants/recoil'
 import type { RoleName } from '@/enum/role'
-import useRecoil from '@/hooks/useRecoil'
+import useRecoilStorage from '@/hooks/core/useRecoilStorage'
 import { useSession } from '@/hooks/useSession'
 import type { MenuItem, SubMenuItem } from '@/models/app/menu'
 import {
@@ -39,8 +39,8 @@ export default function OutletMenu({
   openMenu: () => void
   isMobile: boolean
 }) {
-  const [search, setSearch] = useRecoil<string | undefined>(searchRecoil)
-  const { user: profile, loadingSession, logout } = useSession()
+  const [search, setSearch] = useRecoilStorage<string | undefined>(searchRecoil)
+  const { profile: profile, loading, logout } = useSession()
   const navigate = useNavigate()
 
   const role = profile?.role?.name
@@ -161,7 +161,7 @@ export default function OutletMenu({
                   size={48}
                   className="bg-blue-100 font-semibold text-blue-600"
                 >
-                  {loadingSession ? (
+                  {loading.profile ? (
                     <Spin indicator={<LoadingOutlined spin />} size="small" />
                   ) : (
                     (profile?.username?.[0] ?? '?').toUpperCase()
@@ -179,7 +179,7 @@ export default function OutletMenu({
                         strong
                         className="text-sm leading-tight font-medium text-gray-800"
                       >
-                        {loadingSession
+                        {loading.profile
                           ? 'Cargando...'
                           : `${profile?.username ?? 'Unknown'}`}
                       </Text>

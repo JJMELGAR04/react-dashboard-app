@@ -1,29 +1,40 @@
 //import { searchRecoil } from "@/constants/recoil";
-import { useApiService } from '@/hooks/useApiService'
+
 //import useRecoil from "@/hooks/useRecoil";
+import { useFindAll } from '@/hooks/core/useFindAll'
+import { queryKeys } from '@/lib/queryClient'
 import type User from '@/models/api/entities/User'
-import userService from '@/services/api/UserService'
+import { userService } from '@/services/api'
 import { Table, Button, Space } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
+import { useMemo, useState } from 'react'
 
 export default function DashboardView() {
-  const { response, loading, params, setPage, setPageSize } =
-    useApiService<User>({
-      service: userService,
-      autoFetch: true,
-      initFetch: true,
-    })
+  const [params, setParams] = useState<Record<string, unknown>>({
+    search: '',
+    page: 0,
+    size: 15,
+  })
+
+  const { data, isLoading } = useFindAll({
+    queryKey: queryKeys.users,
+    service: userService,
+    queryParams: params,
+  })
 
   //const [search] = useRecoil<string | undefined>(searchRecoil)
   //console.log(search)
 
+  const response = useMemo(() => data, [data])
+
+  console.log(response)
+
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    if (pagination.current && pagination.current - 1 !== params.page) {
-      setPage(pagination.current - 1)
-    }
-    if (pagination.pageSize && pagination.pageSize !== params.size) {
-      setPageSize(pagination.pageSize)
-    }
+    setParams((prev) => ({
+      ...prev,
+      page: (pagination.current ?? 1) - 1,
+      size: pagination.pageSize ?? prev.size,
+    }))
   }
 
   const columns: ColumnsType<User> = [
@@ -61,13 +72,13 @@ export default function DashboardView() {
     <div>
       <Table<User>
         columns={columns}
-        dataSource={response.data}
-        loading={loading}
+        dataSource={response?.data}
+        loading={isLoading}
         rowKey="id"
         pagination={{
-          current: response.page + 1,
-          pageSize: response.size,
-          total: response.total,
+          current: response?.pagination.page ?? 1,
+          pageSize: response?.pagination.pageSize,
+          total: response?.pagination.total ?? 0,
           showSizeChanger: true,
           position: ['bottomCenter'],
         }}
