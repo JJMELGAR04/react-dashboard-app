@@ -24,10 +24,11 @@ export default class Service<
     origin = appSettings.apiService,
     initPath = 'api',
     endpoint = '',
+    onUnauthorized,
   }: ApiServiceParams) {
     if (!origin) throw new Error('Origin is required for ApiService instance')
     this.endpoint = endpoint
-    this.axios = axiosInstance({ origin, initPath })
+    this.axios = axiosInstance({ origin, initPath, onUnauthorized })
   }
 
   private getUrl(endpoint?: string, idOrPath?: string | number): string {

@@ -6,6 +6,7 @@ export interface ApiServiceParams {
   endpoint?: string
   initPath?: string
   origin?: string
+  onUnauthorized?: () => void
 }
 export interface FindAllParams {
   endpoint?: string
