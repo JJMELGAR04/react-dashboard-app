@@ -120,7 +120,8 @@ export default function DashboardView() {
       key: 'actions',
       align: 'center',
       render: (_text, record) =>
-        record.id !== profile?.id && (
+        record.id !== profile?.id &&
+        record.role?.name !== 'ADMIN' && (
           <Space>
             <Button type="link" onClick={() => openEditModal(record)}>
               Editar
