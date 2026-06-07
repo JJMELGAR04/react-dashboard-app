@@ -25,7 +25,7 @@ import {
 } from 'antd'
 import type { MenuProps } from 'antd/lib'
 import { useCallback, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const { Sider } = Layout
 const { Text } = Typography
@@ -97,6 +97,8 @@ export default function OutletMenu({
     []
   )
 
+  const location = useLocation()
+
   const filteredMenuItems = useMemo(
     () => buildMenuItemsForAntd(menu, role!, collapsed) ?? [],
     [buildMenuItemsForAntd, role, collapsed]
@@ -106,13 +108,13 @@ export default function OutletMenu({
     const item = selectItemMenu(location.pathname)
     if (!item) return ''
     return item.key
-  }, [])
+  }, [location.pathname])
 
   const subMenuKey = useMemo(() => {
     const item = selectSubItemMenu(location.pathname)
     if (!item) return ''
     return item.key
-  }, [])
+  }, [location.pathname])
 
   const handleLogout = () => {
     logout()

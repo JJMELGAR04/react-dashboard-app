@@ -38,14 +38,14 @@ export interface CreateParams<Entity> {
 }
 
 export interface UpdateParams<Entity> {
-  id: string
+  id: string | number
   payload: Partial<Entity> | FormData
   endpoint?: string
   config?: ServiceConfig
 }
 
 export interface DeleteParams {
-  id: string
+  id: string | number
   endpoint?: string
   config?: ServiceConfig
 }

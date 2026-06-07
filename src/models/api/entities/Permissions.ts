@@ -1,4 +1,6 @@
 export default interface Permissions {
-  id?: string
-  path: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  id?: number
+  path: string
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  title?: string
 }

@@ -1,5 +1,5 @@
 export default interface BaseEntity {
-  readonly id?: number
+  readonly id?: string | number
   name?: string
   readonly createdAt?: string
   readonly updatedAt?: string

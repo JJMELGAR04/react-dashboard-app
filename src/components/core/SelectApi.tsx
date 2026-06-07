@@ -1,13 +1,12 @@
 import { Select, Spin } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
-
 import { useFindAll } from '@/hooks/core/useFindAll'
 import debounce from 'lodash.debounce'
 import BaseEntity from '@/models/api/core/_BaseEntity'
-import Service from '@/services/core/Service'
+import AbstractService from '@/models/api/core/AbstractService'
 
 interface SelectApiProps<Entity extends BaseEntity> {
-  service: Service<Entity>
+  service: AbstractService<Entity>
   endpoint?: string
   querySearch?: (search: string) => Record<string, unknown>
   queryParams?: Record<string, unknown>
@@ -40,11 +39,8 @@ export default function SelectApi<Entity extends BaseEntity>({
 
   useEffect(() => {
     debounceText(text)
-  }, [text, debounceText])
-
-  useEffect(() => {
     return () => debounceText.cancel()
-  }, [debounceText])
+  }, [text, debounceText])
 
   const resolvedQuerySearch = useMemo(
     () => querySearch?.(textDebounce),
@@ -53,57 +49,62 @@ export default function SelectApi<Entity extends BaseEntity>({
 
   const { data: queryData, isLoading } = useFindAll({
     service,
-    queryKey,
+    queryKey: queryKey,
     endpoint,
     queryParams: {
       ...resolvedQuerySearch,
       ...queryParams,
     },
-    enabled: loaded,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 5,
   })
 
-  const options = queryData?.data ?? []
-
-  // ─── Helpers ───────────────────────────────────────────────────────────────
-
-  const getLabel = (item: Entity): React.ReactNode => {
-    if (renderOption) return renderOption(item)
-    return (item as Record<string, unknown>).name
-      ? String((item as Record<string, unknown>).name)
-      : String(item.id)
-  }
-
-  const findById = (id: unknown): Entity | undefined =>
-    options.find((item) => String(item.id) === String(id))
+  const options = loaded && queryData?.data ? queryData.data : []
 
   return (
     <Select
       labelInValue
-      value={value ? { value: value.id, label: getLabel(value) } : undefined}
-      onChange={(option) => onChange?.(findById(option?.value))}
+      value={
+        value
+          ? {
+              value: value.id,
+              label: renderOption
+                ? renderOption(value)
+                : value.name || value.id,
+            }
+          : undefined
+      }
+      onChange={(option) => {
+        const selected = options.find((item) => item.id === option?.value)
+        onChange?.(selected)
+      }}
       placeholder={placeholder}
       style={{ width: '100%' }}
       showSearch
       allowClear
-      loading={isLoading}
+      loading={isLoading && !loaded}
+      // 🔥 search remoto
       filterOption={false}
       onSearch={(val) => setText(val)}
       onDropdownVisibleChange={(open) => {
-        if (open && !loaded) setLoaded(true)
+        if (open) setLoaded(true)
       }}
-      notFoundContent={isLoading ? <Spin size="small" /> : null}
     >
-      {value && !findById(value.id) && (
+      {isLoading && !loaded && (
+        <Select.Option value="" disabled>
+          <Spin size="small" />
+        </Select.Option>
+      )}
+
+      {value && !options.find((opt) => opt.id === value.id) && (
         <Select.Option key={value.id} value={value.id}>
-          {getLabel(value)}
+          {renderOption ? renderOption(value) : value.name || value.id}
         </Select.Option>
       )}
 
       {options.map((item) => (
         <Select.Option key={item.id} value={item.id}>
-          {getLabel(item)}
+          {renderOption ? renderOption(item) : item.name || item.id}
         </Select.Option>
       ))}
     </Select>
