@@ -174,11 +174,14 @@ export default function DashboardView() {
             label="Usuario"
             rules={[
               { required: true, message: 'Ingresa un nombre de usuario' },
+              {
+                pattern: /^[A-Za-zÁÉÍÓÚáéíóúÑñ.\s]+$/,
+                message: 'Solo se permiten letras, espacios y puntos',
+              },
             ]}
           >
             <Input />
           </Form.Item>
-
           <Form.Item
             name="name"
             label="Nombres"
