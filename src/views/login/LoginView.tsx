@@ -149,8 +149,24 @@ export default function AuthView() {
                   <Form.Item
                     label="Contraseña"
                     name="password"
-                    rules={[{ required: true }]}
                     className="w-full!"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Ingresa la contraseña',
+                      },
+                      {
+                        min: 8,
+                        max: 100,
+                        message: 'La contraseña debe tener entre 8 y 100 caracteres',
+                      },
+                      {
+                        pattern:
+                          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&._-]).+$/,
+                        message:
+                          'La contraseña debe incluir al menos una mayúscula, una minúscula, un número y un carácter especial',
+                      },
+                    ]}
                   >
                     <Input.Password />
                   </Form.Item>
@@ -158,13 +174,29 @@ export default function AuthView() {
                   <Form.Item
                     label="Confirmar"
                     name="confirmPassword"
-                    rules={[{ required: true }]}
+                    dependencies={['password']}
                     className="w-full!"
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Confirma la contraseña',
+                      },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('password') === value) {
+                            return Promise.resolve();
+                          }
+
+                          return Promise.reject(
+                            new Error('Las contraseñas no coinciden')
+                          );
+                        },
+                      }),
+                    ]}
                   >
                     <Input.Password />
                   </Form.Item>
                 </div>
-
                 <Form.Item>
                   <Button
                     type="primary"
