@@ -55,6 +55,7 @@ export default function SessionProvider({ children }: { children: ReactNode }) {
 
     if (location.pathname !== '/login') {
       navigate('/login', { replace: true })
+      window.location.reload()
     }
   }, [messageApi, navigate, location.pathname, queryClient])
 
