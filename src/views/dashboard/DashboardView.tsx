@@ -10,6 +10,7 @@ import type Role from '@/models/api/entities/Role'
 import { roleService, userService } from '@/services/api'
 import SelectApi from '@/components/core/SelectApi'
 import { useSession } from '@/hooks/useSession'
+import errorResponse from '@/utils/errorResponse'
 
 export default function DashboardView() {
   const { profile } = useSession()
@@ -94,7 +95,7 @@ export default function DashboardView() {
       setOpen(false)
       form.resetFields()
     } catch (error: unknown) {
-      message.error('Error guardando el usuario')
+      errorResponse({ error })
     }
   }
 
