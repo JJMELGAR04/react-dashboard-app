@@ -88,16 +88,17 @@ export default function RolesView() {
       title: 'Acciones',
       key: 'actions',
       align: 'center',
-      render: (_text, record) => (
-        <Space>
-          <Button type="link" onClick={() => openEdit(record)}>
-            Editar
-          </Button>
-          <Button type="link" danger onClick={() => handleDelete(record.id!)}>
-            Eliminar
-          </Button>
-        </Space>
-      ),
+      render: (_text, record) =>
+        record.name !== 'ADMIN' && (
+          <Space>
+            <Button type="link" onClick={() => openEdit(record)}>
+              Editar
+            </Button>
+            <Button type="link" danger onClick={() => handleDelete(record.id!)}>
+              Eliminar
+            </Button>
+          </Space>
+        ),
     },
   ]
 
