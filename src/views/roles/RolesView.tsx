@@ -144,7 +144,18 @@ export default function RolesView() {
             <Input />
           </Form.Item>
 
-          <Form.Item name="permissions" label="Permisos">
+          <Form.Item
+            name="permissions"
+            label="Permisos"
+            rules={[
+              {
+                required: true,
+                type: 'array',
+                min: 1,
+                message: 'Debe seleccionar al menos un permiso',
+              },
+            ]}
+          >
             <Select mode="multiple" options={permissionsOptions} />
           </Form.Item>
         </Form>
