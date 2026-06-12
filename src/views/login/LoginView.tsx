@@ -158,7 +158,8 @@ export default function AuthView() {
                       {
                         min: 8,
                         max: 100,
-                        message: 'La contraseña debe tener entre 8 y 100 caracteres',
+                        message:
+                          'La contraseña debe tener entre 8 y 100 caracteres',
                       },
                       {
                         pattern:
@@ -184,12 +185,12 @@ export default function AuthView() {
                       ({ getFieldValue }) => ({
                         validator(_, value) {
                           if (!value || getFieldValue('password') === value) {
-                            return Promise.resolve();
+                            return Promise.resolve()
                           }
 
                           return Promise.reject(
                             new Error('Las contraseñas no coinciden')
-                          );
+                          )
                         },
                       }),
                     ]}

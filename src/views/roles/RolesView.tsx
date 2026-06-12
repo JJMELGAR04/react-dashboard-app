@@ -59,11 +59,6 @@ export default function RolesView() {
     setOpen(true)
   }
 
-  const handleDelete = async (id: string | number) => {
-    if (!id) return
-    await crud.remove({ id })
-  }
-
   const handleOk = async () => {
     const values = await form.validateFields()
     const payload: Role = {
@@ -94,8 +89,17 @@ export default function RolesView() {
             <Button type="link" onClick={() => openEdit(record)}>
               Editar
             </Button>
-            <Button type="link" danger onClick={() => handleDelete(record.id!)}>
-              Eliminar
+            <Button
+              type="link"
+              danger
+              onClick={async () =>
+                await crud.update({
+                  id: record.id!,
+                  payload: { ...record, active: !record.active },
+                })
+              }
+            >
+              {record.active ? 'Desactivar' : 'Activar'}
             </Button>
           </Space>
         ),
