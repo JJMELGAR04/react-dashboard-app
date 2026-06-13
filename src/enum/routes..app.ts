@@ -4,4 +4,6 @@ export enum RoutesEnum {
   DASHBOARD = '/dashboard',
   ROLES = '/roles',
   PERMISSIONS = '/permissions',
+  CUENTAS = '/cuentas',
+  MOVIMIENTOS = '/movimientos',
 }
